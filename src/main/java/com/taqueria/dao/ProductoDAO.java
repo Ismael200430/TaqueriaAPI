@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductoDAO {
 
     private static final String SELECT_BASE =
-            "SELECT id_producto, nombre, precio, disponible, id_categoria FROM producto";
+            "SELECT id_producto, nombre, precio, disponible, id_categoria, imagen FROM producto";
 
     public List<Producto> listar() throws SQLException {
         List<Producto> productos = new ArrayList<>();
@@ -49,8 +49,8 @@ public class ProductoDAO {
     }
 
     public int insertar(Producto producto) throws SQLException {
-        String sql = "INSERT INTO producto (nombre, precio, disponible, id_categoria) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO producto (nombre, precio, disponible, id_categoria, imagen) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -59,6 +59,7 @@ public class ProductoDAO {
             ps.setBigDecimal(2, producto.getPrecio());
             ps.setBoolean(3, producto.getDisponible() == null ? true : producto.getDisponible());
             setInteger(ps, 4, producto.getIdCategoria());
+            ps.setString(5, normalizarImagen(producto.getImagen()));
             ps.executeUpdate();
 
             try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -72,7 +73,7 @@ public class ProductoDAO {
 
     public boolean actualizar(Producto producto) throws SQLException {
         String sql = "UPDATE producto SET nombre = ?, precio = ?, disponible = ?, "
-                + "id_categoria = ? WHERE id_producto = ?";
+                + "id_categoria = ?, imagen = ? WHERE id_producto = ?";
 
         try (Connection con = ConexionDB.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -81,7 +82,8 @@ public class ProductoDAO {
             ps.setBigDecimal(2, producto.getPrecio());
             ps.setBoolean(3, producto.getDisponible() == null ? true : producto.getDisponible());
             setInteger(ps, 4, producto.getIdCategoria());
-            ps.setInt(5, producto.getIdProducto());
+            ps.setString(5, normalizarImagen(producto.getImagen()));
+            ps.setInt(6, producto.getIdProducto());
             return ps.executeUpdate() > 0;
         }
     }
@@ -109,7 +111,13 @@ public class ProductoDAO {
         int idCategoria = rs.getInt("id_categoria");
         producto.setIdCategoria(rs.wasNull() ? null : idCategoria);
 
+        producto.setImagen(rs.getString("imagen"));
+
         return producto;
+    }
+
+    private String normalizarImagen(String imagen) {
+        return (imagen == null || imagen.isBlank()) ? "taco_pastor" : imagen;
     }
 
     private void setInteger(PreparedStatement ps, int indice, Integer valor)

@@ -1,7 +1,10 @@
 package com.taqueria.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.math.BigDecimal;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Producto {
 
     private Integer idProducto;
@@ -9,6 +12,7 @@ public class Producto {
     private BigDecimal precio;
     private Boolean disponible;
     private Integer idCategoria;
+    private String imagen;
 
     public Producto() {
     }
@@ -51,5 +55,13 @@ public class Producto {
 
     public void setIdCategoria(Integer idCategoria) {
         this.idCategoria = idCategoria;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

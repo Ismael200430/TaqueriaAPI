@@ -23,6 +23,7 @@ CREATE TABLE producto (
     precio DECIMAL(10, 2) NOT NULL,
     disponible BOOLEAN DEFAULT TRUE,
     id_categoria INT NOT NULL,
+    imagen VARCHAR(100) NOT NULL DEFAULT 'taco_pastor',
     FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
 );
 
@@ -52,8 +53,8 @@ CREATE TABLE detalle_orden (
 -- Datos semilla iniciales para probar
 INSERT INTO usuario (nombre, rol, pin_acceso, activo) VALUES ('Carlos Pérez', 'Mesero', '1234', TRUE);
 INSERT INTO categoria (nombre) VALUES ('Tacos'), ('Gringas'), ('Bebidas');
-INSERT INTO producto (nombre, precio, disponible, id_categoria) VALUES 
-('Taco al Pastor', 18.00, TRUE, 1),
-('Taco de Bistec', 24.00, TRUE, 1),
-('Gringa de Pastor', 45.00, TRUE, 2),
-('Refresco 600ml', 25.00, TRUE, 3);
+INSERT INTO producto (nombre, precio, disponible, id_categoria, imagen) VALUES 
+('Taco al Pastor', 18.00, TRUE, 1, 'taco_pastor'),
+('Taco de Bistec', 24.00, TRUE, 1, 'taco_pastor'),
+('Gringa de Pastor', 45.00, TRUE, 2, 'taco_pastor'),
+('Refresco 600ml', 25.00, TRUE, 3, 'taco_pastor');
